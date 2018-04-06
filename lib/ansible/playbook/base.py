@@ -152,8 +152,9 @@ class Base(with_metaclass(BaseMeta, object)):
     # variables
     _vars = FieldAttribute(isa='dict', priority=100, inherit=False)
 
-    # module default params
+    # module default params and aliases
     _module_defaults = FieldAttribute(isa='list', extend=True, prepend=True)
+    _module_aliases = FieldAttribute(isa='list', extend=True, prepend=True)
 
     # flags and misc. settings
     _environment = FieldAttribute(isa='list', extend=True, prepend=True)

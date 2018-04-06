@@ -177,10 +177,18 @@ class Task(Base, Conditional, Taggable, Become):
         if isinstance(ds, AnsibleBaseYAMLObject):
             new_ds.ansible_pos = ds.ansible_pos
 
+        print("valid_attrs = %s" % self._valid_attrs)
+        print("attributes = %s" % self._attributes)
+        module_aliases = {}
+        for alias in self.module_aliases:
+            module_aliases.update(alias)
+            print("alias = %s" % alias)
+            print("module_aliases = %s" % module_aliases)
+
         # use the args parsing class to determine the action, args,
         # and the delegate_to value from the various possible forms
         # supported as legacy
-        args_parser = ModuleArgsParser(task_ds=ds)
+        args_parser = ModuleArgsParser(task_ds=ds, module_aliases=module_aliases)
         try:
             (action, args, delegate_to) = args_parser.parse()
         except AnsibleParserError as e:

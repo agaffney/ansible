@@ -107,12 +107,13 @@ class ModuleArgsParser:
     Args may also be munged for certain shell command parameters.
     """
 
-    def __init__(self, task_ds=None):
+    def __init__(self, task_ds=None, module_aliases=None):
         task_ds = {} if task_ds is None else task_ds
 
         if not isinstance(task_ds, dict):
             raise AnsibleAssertionError("the type of 'task_ds' should be a dict, but is a %s" % type(task_ds))
         self._task_ds = task_ds
+        self._module_aliases = module_aliases
 
     def _split_module_string(self, module_string):
         '''
@@ -261,6 +262,8 @@ class ModuleArgsParser:
         delegate_to = self._task_ds.get('delegate_to', None)
         args = dict()
 
+        print("parse(): module_aliases=%s" % self._module_aliases)
+
         # This is the standard YAML form for command-type modules. We grab
         # the args and pass them in as additional arguments, which can/will
         # be overwritten via dict updates from the other arg sources below
@@ -286,7 +289,7 @@ class ModuleArgsParser:
 
         # walk the input dictionary to see we recognize a module name
         for (item, value) in iteritems(self._task_ds):
-            if item in BUILTIN_TASKS or item in action_loader or item in module_loader:
+            if item in BUILTIN_TASKS or item in action_loader or item in module_loader or item in self._module_aliases:
                 # finding more than one module name is a problem
                 if action is not None:
                     raise AnsibleParserError("conflicting action statements: %s, %s" % (action, item), obj=self._task_ds)

@@ -521,6 +521,12 @@ class TaskExecutor:
         # get handler
         self._handler = self._get_action_handler(connection=self._connection, templar=templar)
 
+        module_aliases = {}
+        for alias in self._task.module_aliases:
+            module_aliases.update(alias)
+            print("alias = %s" % alias)
+            print("module_aliases = %s" % module_aliases)
+
         # Apply default params for action/module, if present
         # These are collected as a list of dicts, so we need to merge them
         module_defaults = {}
